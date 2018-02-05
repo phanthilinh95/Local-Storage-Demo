@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>	JW7</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+
+
+	<input type="text" id="ne"><br>
+	<input type="text" id="cate"><br>
+	<input type="text" id="des"><br>
+	<input type="checkbox" id="high" value="high">High<br>
+	<input type="checkbox" id="Urg" value="urge">Urge<br>
+	<a href="javascript:;" id="done">DOne</a>
+
+	<hr>
+	<h3>Pending</h3>
+	<ul id="list"></ul>
+	<hr>
+	<h3>compl</h3>
+	<ul id="listComm"></ul>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var DataObjec = [];
+			$("#done").click(function(){
+				var ne = $("#ne").val();
+				var cate = $("#cate").val();
+				var des = $("#des").val();
+				var high = $("#high").is(":checked");
+				var Urg = $("#Urg").is(":checked");
+
+				var testObject = {"title":ne,"category":cate,"desc":des,"highlight":high,"urgent":Urg,"completed":true}; //gán giá trị vào object
+				// lưu vào local stro
+				DataObjec.push(testObject); // thêm mảng
+				
+				localStorage.setItem('testObject', JSON.stringify(DataObjec));
+				
+				var retrievedObject = JSON.parse(localStorage.getItem('testObject'));
+
+			
+		
+				$('#list').html(''); // làm mới để vòng lặp get value trong object
+
+			// xuwr lys pending
+					$.each(retrievedObject, function(key, value){ // lập lấy giá trị trong json
+					; // làm mới html
+					$('#list').append('<input type="checkbox" class="checkCom" value="'+key+'"></input><li>'+value.title+'</li>'); // thêm title trong object vừa tạo
+					});
+
+				
+				
+
+				// xu lys completed
+				function isEmptyObject(obj){
+				    return JSON.stringify(obj) === '{}';
+				}
+
+				//listComm
+				$(document).on('click', '.checkCom', function(){
+					
+					var id = $(this).val();
+					var newObj = retrievedObject[id];
+					delete retrievedObject[id];
+					
+
+					// localStorage.setItem('retrievedObject', JSON.stringify(retrievedObject));
+					$('#list').html(''); // làm mới để vòng lặp get value trong object
+					$.each(retrievedObject, function(key, value){
+					   	console.log(value); 
+					    if (value != undefined){
+				        	$('#list').append('<input type="checkbox" class="checkCom" value="'+key+'"></input><li>'+value.title+'</li>'); // thêm title trong object vừa tạo
+						}
+					});
+					
+					// localStorage.setItem('testObject', JSON.stringify(retrievedObject));
+					// var retrievedObject = JSON.parse(localStorage.getItem('testObject'));
+
+					// theem vaof listom com
+
+					$('#listComm').append('<input type="checkbox" class="checkPend" checked></input><li>'+newObj.title+'</li>');
+
+				})
+				
+			})
+		});
+	</script>
+</body>
+</html>
+
+-- 
+Phan Thị Linh - 0979314720 - Facebook: https://www.facebook.com/phanthilinh.1606
+
